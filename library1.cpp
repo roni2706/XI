@@ -204,10 +204,8 @@ StatusType GetAllStudentsByPower(void *DS, int TeamID, int **Students, int *numO
 		*numOfStudents=0;
 		return SUCCESS;
 	}
-	*numOfStudents=((XI*) DS)->Size();
 	(*Students)=(int*)malloc((*numOfStudents)*sizeof(int));
 	if(!(*Students)){
-		delete[] students;
 		return ALLOCATION_ERROR;
 	}
 	for(int i=0;i<*numOfStudents;i++){
