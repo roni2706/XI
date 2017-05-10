@@ -34,7 +34,7 @@ bool XI::ComparePower::operator ()(const Student& s1, const Student& s2) const{
 		return true;
 	}
 	else if(s1.Power()==s2.Power()){
-		if(s1.Id()<s2.Id()){
+		if(s1.Id()>s2.Id()){
 			return true;
 		}
 	}
