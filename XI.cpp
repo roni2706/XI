@@ -302,7 +302,7 @@ const XI::Student** XI::Team::GetAllStudents()const{
  * @return
  * 	a new empty XI.
  */
-XI::XI ():Ace_(NULL),Students_(),Teams_(){}
+XI::XI ():Students_(),Aces_(),Teams_(){}
 
 //******************************************************************************
 //----------------------------------<DESTRUCTOR>--------------------------------
@@ -365,7 +365,6 @@ void XI::addStudent(int id, int grade, int power){
 	catch(Tree<Student,CompareId>::alredyInTree&){
 		throw StudentAlreadyIn();
 	}
-	ComparePower compare;
 }
 
 /**
@@ -612,10 +611,6 @@ void XI::IncreaseLevel(int grade, int power){
 	for(int i=0;i<Students_.size();i++){
 		if(students[i]->Grade()==grade){
 			(const_cast<Student&>(*(students[i]))).IncreasePower(power);
-			ComparePower compare;
-			if(compare(*(students[i]),Ace())){
-				Ace_=&(const_cast<Student&>(*(students[i])));
-			}
 		}
 	}
 	delete[] students;
@@ -628,7 +623,7 @@ const XI::Student& XI::Ace()const{
 	if (Students_.empty()){
 		throw NoStudentsInXI();
 	}
-	return *Ace_.max();
+	return Aces_.max();
 }
 
 /**

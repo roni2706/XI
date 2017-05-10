@@ -160,7 +160,7 @@ StatusType RemoveStudent(void *DS, int StudentID){
 	catch(XI::InvalidID&){
 		return INVALID_INPUT;
 	}
-	catch(XI::StudentNotFound){
+	catch(XI::StudentNotFound&){
 		return FAILURE;
 	}
 	return SUCCESS;

@@ -471,7 +471,7 @@ private:
 //******************************************************************************
 
 AVLTree<Student,CompareId> Students_;
-AVLTree<Student,ComperPower> Aces_;
+AVLTree<Student,ComparePower> Aces_;
 AVLTree<Team,CompareId> Teams_;
 
 };
