@@ -6,6 +6,8 @@
 
 #include "library1.h"
 #include "XI.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 /* Description:   Initiates the data structure.
  * Input:         DS - A pointer to the data structure.

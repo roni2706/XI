@@ -363,6 +363,7 @@ void XI::addStudent(int id, int grade, int power){
 		Aces_.insert(*(student));
 	}
 	catch(Tree<Student,CompareId>::alredyInTree&){
+		delete student;
 		throw StudentAlreadyIn();
 	}
 }
@@ -389,11 +390,8 @@ void XI::AddTeam(int id){
 	try{
 		Teams_.insert(*(team));
 	}
-	catch(XI::Team::InvalidID&){
-		delete team;
-		throw InvalidID();
-	}
 	catch(Tree<Team,CompareId>::alredyInTree&){
+		delete team;
 		throw TeamAlreadyIn();
 	}
 }
