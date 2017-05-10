@@ -158,7 +158,7 @@ public:
 	 *  if the student is not assinged to a team throw a 'NoTeamAssigned'
 	 *  exeption.
 	 */
-	Team* Team() const;
+	XI::Team* Team() const;
 
 	/**
 	 * SetTeam: Sets the team of the calling student (this) to the given team.
