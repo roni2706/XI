@@ -486,8 +486,13 @@ const XI::Student& XI::GetMostPowerfull(int teamId)const{
 	if(teamId==0){
 		throw InvalidID();
 	}
-	if(teamId<0){
-		return Ace();
+	try{
+		if(teamId<0){
+			return Ace();
+		}
+	}
+	catch(XI::NoStudentsInXI&){
+		throw(NoStudentsInXI();
 	}
 	Team* team;
 	try{
