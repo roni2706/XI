@@ -291,6 +291,8 @@ public:
 	 */
 	const Student** GetAllStudents()const;
 
+	int Size() const;
+
 private:
 
 	//-----------------------<MEMBER TYPES>----------------------
@@ -436,7 +438,7 @@ void RemoveStudent(int id);
  *
  *  if the id is invalid, throw an 'InvalidID' exeption.
  */
-const Student** GetAllStudentsByPower(int teamId)const;
+const Student** GetAllStudentsByPower(int teamId, int *size)const;
 
 /**
  * IncreaseLevel: Increases the power of all the students in the given grade by

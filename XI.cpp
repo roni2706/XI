@@ -286,6 +286,10 @@ const XI::Student** XI::Team::GetAllStudents()const{
 	return students_.toArray();
 }
 
+int XI::Team::Size() const{
+	return students_.size();
+}
+
 //******************************************************************************
 //----------------------------------<CLASS XI>----------------------------------
 //******************************************************************************
@@ -558,7 +562,7 @@ void XI::RemoveStudent(int id){
  *  if the team is empty throw a 'TeamIsEmpty' exeption.
  *  if there are no students in the XI throw a 'NoStudentsInXI' exeption.
  */
-const XI::Student** XI::GetAllStudentsByPower(int teamId)const{
+const XI::Student** XI::GetAllStudentsByPower(int teamId, int *size)const{
 	if(teamId==0){
 		throw InvalidID();
 	}
@@ -566,6 +570,7 @@ const XI::Student** XI::GetAllStudentsByPower(int teamId)const{
 		if (Students_.empty()){
 			throw NoStudentsInXI();
 		}
+		*size=Students_.size();
 		return Aces_.toArray();
 	}
 	Team* team;
@@ -576,6 +581,7 @@ const XI::Student** XI::GetAllStudentsByPower(int teamId)const{
 		throw TeamNotFound();
 	}
 	try{
+		*size=team->Size();
 		return team->GetAllStudents();
 	}
 	catch(XI::Team::TeamIsEmpty&){
@@ -608,7 +614,26 @@ void XI::IncreaseLevel(int grade, int power){
 	const XI::Student** students=Students_.toArray();
 	for(int i=0;i<Students_.size();i++){
 		if(students[i]->Grade()==grade){
+			Team* team;
+			Students_.erase(*(students[i]));
+			Aces_.erase(*(students[i]));
+			try{
+				team=&(const_cast<Team&>(Teams_.at(*(students[i]->Team()))));
+				team->RemoveStudent(*(students[i]));
+			}
+			catch(XI::Student::NoTeamAssigned&){
+				//All good
+			}
 			(const_cast<Student&>(*(students[i]))).IncreasePower(power);
+			Students_.insert(*(students[i]));
+			Aces_.insert(*(students[i]));
+			try{
+				team->AddStudent(*(students[i]));
+			}
+			catch(XI::Student::NoTeamAssigned&){
+				//All good
+			}
+
 		}
 	}
 	delete[] students;

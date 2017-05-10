@@ -186,7 +186,7 @@ StatusType GetAllStudentsByPower(void *DS, int TeamID, int **Students, int *numO
 	}
 	const XI::Student** students;
 	try{
-		students=((XI*) DS)->GetAllStudentsByPower(TeamID);
+		students=((XI*) DS)->GetAllStudentsByPower(TeamID,numOfStudents);
 	}
 	catch(XI::InvalidID&){
 		return INVALID_INPUT;
