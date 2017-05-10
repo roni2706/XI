@@ -532,7 +532,6 @@ void XI::RemoveStudent(int id){
 		team=&(const_cast<Team&>(Teams_.at(*(student->Team()))));
 		team->RemoveStudent(*student);
 		Students_.erase(*student);
-		delete student;
 	}
 	catch(Tree<Student,CompareId>::notFoundInTree&){
 		throw StudentNotFound();
@@ -546,7 +545,7 @@ void XI::RemoveStudent(int id){
 	catch(XI::Team::StudentNotFound&){
 		//Very very bad
 	}
-
+	delete student;
 }
 
 /**
