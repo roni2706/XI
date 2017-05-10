@@ -20,6 +20,7 @@
  * class XI - Holding the values for the Xavier Institute.
  *
  * @param Students_	- an AVL tree holding the students sorted by their ID.
+ * @param Aces_		- an AVL tree holding the students sorted by their power.
  * @param Teams_	- an AVL tree holding the teams sorted by their ID.
  */
 
@@ -469,8 +470,8 @@ private:
 //---------------------------------<MEMBER TYPES>-------------------------------
 //******************************************************************************
 
-Student* Ace_;
 AVLTree<Student,CompareId> Students_;
+AVLTree<Student,ComperPower> Aces_;
 AVLTree<Team,CompareId> Teams_;
 
 };

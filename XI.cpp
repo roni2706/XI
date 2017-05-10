@@ -360,19 +360,12 @@ void XI::addStudent(int id, int grade, int power){
 	XI::Student* student=new Student(id,grade,power);
 	try{
 		Students_.insert(*(student));
+		Aces_.insert(*(student));
 	}
 	catch(Tree<Student,CompareId>::alredyInTree&){
 		throw StudentAlreadyIn();
 	}
 	ComparePower compare;
-	try{
-		if(compare(*student,Ace())){
-			Ace_=student;
-		}
-	}
-	catch(NoStudentsInXI&){
-		Ace_=student;
-	}
 }
 
 /**
@@ -530,8 +523,9 @@ void XI::RemoveStudent(int id){
 	try{
 		student=&(const_cast<Student&>(Students_.at(Student(id,0,0))));
 		team=&(const_cast<Team&>(Teams_.at(*(student->Team()))));
-		team->RemoveStudent(*student);
 		Students_.erase(*student);
+		Aces_.erase(*student);
+		team->RemoveStudent(*student);
 	}
 	catch(Tree<Student,CompareId>::notFoundInTree&){
 		throw StudentNotFound();
@@ -575,7 +569,7 @@ const XI::Student** XI::GetAllStudentsByPower(int teamId)const{
 		if (Students_.empty()){
 			throw NoStudentsInXI();
 		}
-		return Students_.toArray();
+		return Aces_.toArray();
 	}
 	Team* team;
 	try{
@@ -631,10 +625,10 @@ void XI::IncreaseLevel(int grade, int power){
  * Ace: Returns the mostpowerfull student in the calling XI (this).
  */
 const XI::Student& XI::Ace()const{
-	if (!Ace_){
+	if (Students_.empty()){
 		throw NoStudentsInXI();
 	}
-	return *Ace_;
+	return *Ace_.max();
 }
 
 /**
