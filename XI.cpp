@@ -64,17 +64,7 @@ bool XI::ComparePower::operator ()(const Student& s1, const Student& s2) const{
  * 	if power is invalid, throw an 'InvalidPower exeption.
  */
 XI::Student::Student(int id, int grade, int power):
-		id_(id),grade_(grade),power_(power),team_(NULL){
-	if(id <=0){
-		throw InvalidID();
-	}
-	if(grade<0){
-		throw InvalidGrade();
-	}
-	if(power<=0){
-		throw InvalidPower();
-	}
-}
+		id_(id),grade_(grade),power_(power),team_(NULL){}
 
 //-------------------------------<CLASS FUNCTIONS>------------------------------
 
@@ -183,9 +173,6 @@ void XI::Student::SetTeam(XI::Team* team){
  * 	if the id is invalid, throw an 'InvalidID' exeption
  */
 XI::Team::Team(int id):id_(id),students_(){
-	if(id<=0){
-		throw InvalidID();
-	}
 }
 
 //-------------------------------<CLASS FUNCTIONS>------------------------------
@@ -361,28 +348,29 @@ XI::~XI(){
  * 	exeption.
  */
 void XI::addStudent(int id, int grade, int power){
-	XI::Student* student;
-	try{
-		student=new XI::Student(id,grade,power);
-		Students_.insert(*(student));
-	}
-	catch(XI::Student::InvalidID&){
-		delete student;
+	if(id <=0){
 		throw InvalidID();
 	}
-	catch(XI::Student::InvalidGrade&){
-		delete student;
+	if(grade<0){
 		throw InvalidGrade();
 	}
-	catch(XI::Student::InvalidPower&){
-		delete student;
+	if(power<=0){
 		throw InvalidPower();
+	}
+	XI::Student* student=new Student(id,grade,power);
+	try{
+		Students_.insert(*(student));
 	}
 	catch(Tree<Student,CompareId>::alredyInTree&){
 		throw StudentAlreadyIn();
 	}
 	ComparePower compare;
-	if(compare(*student,Ace())){
+	try{
+		if(compare(*student,Ace())){
+			Ace_=student;
+		}
+	}
+	catch(NoStudentsInXI&){
 		Ace_=student;
 	}
 }
@@ -402,9 +390,11 @@ void XI::addStudent(int id, int grade, int power){
  * 	if a team with the given id already exists throw a 'TeamAlreadyIn' exeption.
  */
 void XI::AddTeam(int id){
-	XI::Team* team;
+	if(id<=0){
+		throw InvalidID();
+	}
+	XI::Team* team=new Team(id);
 	try{
-		team=new XI::Team(id);
 		Teams_.insert(*(team));
 	}
 	catch(XI::Team::InvalidID&){
@@ -536,6 +526,8 @@ void XI::RemoveStudent(int id){
 		student=&(const_cast<Student&>(Students_.at(Student(id,0,0))));
 		team=&(const_cast<Team&>(Teams_.at(*(student->Team()))));
 		team->RemoveStudent(*student);
+		Students_.erase(*student);
+		delete student;
 	}
 	catch(Tree<Student,CompareId>::notFoundInTree&){
 		throw StudentNotFound();
@@ -549,8 +541,7 @@ void XI::RemoveStudent(int id){
 	catch(XI::Team::StudentNotFound&){
 		//Very very bad
 	}
-	Students_.erase(*student);
-	delete student;
+
 }
 
 /**

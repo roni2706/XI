@@ -42,6 +42,7 @@ public:
 	class InvalidGrade 		: public XIException {};
 	class InvalidPower 		: public XIException {};
 	class NoStudentsInXI	: public XIException {};
+
 //******************************************************************************
 //-----------------------------<FORWARD DECLARATION>----------------------------
 //******************************************************************************
