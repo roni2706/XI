@@ -492,7 +492,7 @@ const XI::Student& XI::GetMostPowerfull(int teamId)const{
 		}
 	}
 	catch(XI::NoStudentsInXI&){
-		throw(NoStudentsInXI();
+		throw NoStudentsInXI();
 	}
 	Team* team;
 	try{
