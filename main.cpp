@@ -1,8 +1,9 @@
 
 #include "XI.h"
-#include "test.h"
+#include "test_utils.h"
 #include "library1.h"
-
+#include <stdio.h>
+#include <stdlib.h>
 
 static bool schooAddStudentTest(){
 
@@ -11,7 +12,7 @@ static bool schooAddStudentTest(){
 
 	//checking errors of AddStudent:
 	//invalid input:
-	/*ASSERT_TEST(AddStudent(NULL,100,100,100) == INVALID_INPUT);
+	ASSERT_TEST(AddStudent(NULL,100,100,100) == INVALID_INPUT);
 	ASSERT_TEST(AddStudent(technion,-1,100,100) == INVALID_INPUT);
 	ASSERT_TEST(AddStudent(technion,0,100,100) == INVALID_INPUT);
 	ASSERT_TEST(AddStudent(technion,100,-1,100) == INVALID_INPUT);
@@ -24,11 +25,11 @@ static bool schooAddStudentTest(){
 
 
 	Quit((void**)&technion);
-*/
+
 	return true;
 }
 
-/*static bool schoolAddTeamTest(){
+static bool XIAddTeamTest(){
 
 	XI* technion = (XI*)Init();
 	ASSERT_TEST(technion != NULL);
@@ -49,7 +50,7 @@ static bool schooAddStudentTest(){
 }
 
 
-static bool schoolMoveStudentToTeamTest(){
+static bool XIMoveStudentToTeamTest(){
 
 	XI* technion = (XI*)Init();
 	ASSERT_TEST(technion != NULL);
@@ -79,7 +80,7 @@ static bool schoolMoveStudentToTeamTest(){
 	return true;
 }
 
-static bool schoolGetMostPowerful(){
+static bool XIGetMostPowerful(){
 
 
 	XI* technion = (XI*)Init();
@@ -132,7 +133,7 @@ static bool schoolGetMostPowerful(){
 
 
 
-static bool schoolRemoveStudentTest(){
+static bool XIRemoveStudentTest(){
 
 	XI* technion = (XI*)Init();
 	ASSERT_TEST(technion != NULL);
@@ -428,7 +429,7 @@ static bool schooIncreaseLevelTest(){
 }
 
 
-static bool schoolBigTest(){
+static bool XIBigTest(){
 
 	XI* technion = (XI*)Init();
 	ASSERT_TEST(technion != NULL);
@@ -693,19 +694,19 @@ static bool schoolBigTest(){
 		Quit((void**)&technion);
 
 return true;
-}*/
+}
 
 
 int main(){
 
 	RUN_TEST(schooAddStudentTest);
-	//RUN_TEST(schoolAddTeamTest);
-	//RUN_TEST(schoolMoveStudentToTeamTest);
-	//RUN_TEST(schoolGetMostPowerful);
-	//RUN_TEST(schoolRemoveStudentTest);
-	//RUN_TEST(SchooGetAllStudentsByPowerTest);
-	//RUN_TEST(schooIncreaseLevelTest);
-	//RUN_TEST(schoolBigTest);
+	RUN_TEST(XIAddTeamTest);
+	RUN_TEST(XIMoveStudentToTeamTest);
+	RUN_TEST(XIGetMostPowerful);
+	RUN_TEST(XIRemoveStudentTest);
+	RUN_TEST(SchooGetAllStudentsByPowerTest);
+	RUN_TEST(schooIncreaseLevelTest);
+	RUN_TEST(XIBigTest);
 
 	return 0;
 }

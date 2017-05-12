@@ -286,8 +286,79 @@ const XI::Student** XI::Team::GetAllStudents()const{
 	return students_.toArray();
 }
 
+/**
+ * Size: returns the number of students on the calling team
+ */
 int XI::Team::Size() const{
 	return students_.size();
+}
+
+/**
+ * IncreasePower: Increases the power of all the s
+ */
+void XI::Team::IncreasePower(int grade, int power){
+	try{
+		const XI::Student** students =GetAllStudents();
+	}
+	catch(TeamIsEmpty&){
+		return;
+	}
+	int countGrade=countStudentsInGrade(students,grade,Size());
+	if(countGrade==0){
+		return;
+	}
+	const XI::Student** StudentsInGrade =
+			new const XI::Student** [countGrade];
+	const XI::Student** StudentsNotInGrade =
+			new const XI::Student** [Size()-countGrade];
+	int i_grade=0, i_not_grade=0;
+	for(int i=0;i<Size();i++){	//for every student in the team
+		if(students[i]->Grade()==grade){
+			StudentsInGrade[i_grade]=students[i];
+			i_grade++;
+		}
+		else{
+			StudentsNotInGrade[i_not_grade]=students[i];
+			i_not_grade++;
+		}
+	}
+	for(int i=0;i<countGrade;i++){	//for every student in the right grade
+		(const_cast<Student&>(*(StudentsInGrade[i]))).IncreasePower(power);
+	}
+	XI::ComparePower compare;
+	i_grade=0;
+	i_not_grade=0;
+	int i=0;
+	while(i_grade<countGrade && i_not_grade<Size()-countGrade){
+		if(compare(*(StudentsInGrade[i_grade]),
+				*(StudentsNotInGrade[i_not_grade]))==true){
+			students[i]=StudentsInGrade[i_grade];
+			i_grade++;
+		}
+		else{
+			students[i]=StudentsNotInGrade[i_not_grade];
+			i_not_grade++;
+		}
+		i++;
+	}
+	while(i_grade<countGrade){
+		students[i]=StudentsInGrade[i_grade];
+		i_grade++;
+		i++;
+	}
+	while(i_not_grade<Size()-countGrade){
+		students[i]=StudentsNotInGrade[i_not_grade];
+		i_not_grade++;
+		i++;
+	}
+	students_.fromArray(students,Size());
+	if(StudentsInGrade){
+        delete[](StudentsInGrade);
+	}
+	if(StudentsNotInGrade){
+		delete[](StudentsNotInGrade);
+	}
+	delete[](students);
 }
 
 //******************************************************************************
@@ -611,32 +682,75 @@ void XI::IncreaseLevel(int grade, int power){
 	if(power<=0){
 		throw InvalidPower();
 	}
-	const XI::Student** students=Students_.toArray();
-	for(int i=0;i<Students_.size();i++){
+	const XI::Student** students=Aces_.toArray();
+	int countGrade=countStudentsInGrade(students,grade,Size());
+	if(countGrade==0){
+		return;
+	}
+	const XI::Student** StudentsInGrade =
+			new const XI::Student** [countGrade];
+	const XI::Student** StudentsNotInGrade =
+			new const XI::Student** [Size()-countGrade];
+	int i_grade=0, i_not_grade=0;
+	for(int i=0;i<Size();i++){
 		if(students[i]->Grade()==grade){
-			Team* team;
-			Students_.erase(*(students[i]));
-			Aces_.erase(*(students[i]));
-			try{
-				team=&(const_cast<Team&>(Teams_.at(*(students[i]->Team()))));
-				team->RemoveStudent(*(students[i]));
-			}
-			catch(XI::Student::NoTeamAssigned&){
-				//All good
-			}
-			(const_cast<Student&>(*(students[i]))).IncreasePower(power);
-			Students_.insert(*(students[i]));
-			Aces_.insert(*(students[i]));
-			try{
-				team->AddStudent(*(students[i]));
-			}
-			catch(XI::Student::NoTeamAssigned&){
-				//All good
-			}
-
+			StudentsInGrade[i_grade]=students[i];
+			i_grade++;
+		}
+		else{
+			StudentsNotInGrade[i_not_grade]=students[i];
+			i_not_grade++;
 		}
 	}
-	delete[] students;
+	for(int i=0;i<numOfStudentsInGrade;i++){
+		try{
+			StudentsInGrade[i]->team;
+		}
+		catch(XI::Student::NoTeamAssigned&){
+			(const_cast<Student&>(*(StudentsInGrade[i]))).IncreasePower(power);
+		}
+	}
+	const XI::Teams** teams=Teams_.toArray();
+	for(int i=0;i<TSize();i++){		//for every team
+		teams[i]->IncreasePower(grade,power);
+	}
+	if(teams){
+		delete[](teams);
+	}
+	XI::ComparePower compare;
+	i_grade=0;
+	i_not_grade=0;
+	int i=0;
+	while(i_grade<countGrade && i_not_grade<Size()-countGrade){
+		if(compare(*(StudentsInGrade[i_grade]),
+				*(StudentsNotInGrade[i_not_grade]))==true){
+			students[i]=StudentsInGrade[i_grade];
+			i_grade++;
+		}
+		else{
+			students[i]=StudentsNotInGrade[i_not_grade];
+			i_not_grade++;
+		}
+		i++;
+	}
+	while(i_grade<countGrade){
+		students[i]=StudentsInGrade[i_grade];
+		i_grade++;
+		i++;
+	}
+	while(i_not_grade<Size()-countGrade){
+		students[i]=StudentsNotInGrade[i_not_grade];
+		i_not_grade++;
+		i++;
+	}
+	Aces_.fromArray(students,Size());
+	if(StudentsInGrade){
+		delete[](StudentsInGrade);
+	}
+	if(StudentsNotInGrade){
+		delete[](StudentsNotInGrade);
+	}
+	delete[](students);
 }
 
 /**
@@ -656,7 +770,24 @@ int XI::Size()const{
 	return Students_.size();
 }
 
+/**
+ * TSize: Returns the number of teams in the calling XI (this).
+ */
+int XI::TSize()const{
+	return Teams_.size();
+}
 
+
+
+int countStudentsInGrade(XI::Student** array,int grade, int size){
+	int numOfStudentsInGrade=0;
+	for(int i=0;i<size;i++){
+		if(array[i]->Grade()==grade){
+			numOfStudentsInGrade++;
+		}
+	}
+	return numOfStudentsInGrade;
+}
 
 
 

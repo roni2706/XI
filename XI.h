@@ -291,7 +291,16 @@ public:
 	 */
 	const Student** GetAllStudents()const;
 
+
+	/**
+	 * Size: returns the number of students on the calling team
+	 */
 	int Size() const;
+
+	/**
+	 * IncreasePower
+	 */
+	void IncreasePower(int grade, int power);
 
 private:
 
@@ -466,6 +475,12 @@ const Student& Ace()const;
  * Size: Returns the number of students in the calling XI (this).
  */
 int Size()const;
+
+/**
+ * TSize: Returns the number of teams in the calling XI (this).
+ */
+int TSize()const;
+
 
 private:
 //******************************************************************************
