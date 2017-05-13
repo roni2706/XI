@@ -1571,6 +1571,16 @@ class postorder_iterator: public Iterator{
 	}
 
 	/**
+	 *
+	 */
+	void fromArray(const T** elements, int size){
+		int x=0;
+		setSize(size);
+		fromArray(root_,x,elements,size);
+
+	}
+
+	/**
 	 * setMax: Sets the given node as the new max node for the calling tree
 	 * (this).
 	 *
@@ -1675,15 +1685,7 @@ protected:
 		}
 	}
 
-	/**
-	 *
-	 */
-	void fromArray(const T** elements, int size){
-		int x=0;
-		setSize(size);
-		fromArray(root_,x,elements,size);
 
-	}
 
 private:
 

@@ -11,6 +11,19 @@
 
 #include "XI.h"
 
+//******************************************************************************
+//----------------------------------<STATIC>-----------------------------------
+//******************************************************************************
+
+static int countStudentsInGrade(const XI::Student** array,int grade, int size){
+	int numOfStudentsInGrade=0;
+	for(int i=0;i<size;i++){
+		if(array[i]->Grade()==grade){
+			numOfStudentsInGrade++;
+		}
+	}
+	return numOfStudentsInGrade;
+}
 
 //******************************************************************************
 //------------------------------<XI :: COMPARE CLASS>---------------------------
@@ -297,20 +310,22 @@ int XI::Team::Size() const{
  * IncreasePower: Increases the power of all the s
  */
 void XI::Team::IncreasePower(int grade, int power){
+	const XI::Student** students;
 	try{
-		const XI::Student** students =GetAllStudents();
+		students = GetAllStudents();
 	}
 	catch(TeamIsEmpty&){
 		return;
 	}
 	int countGrade=countStudentsInGrade(students,grade,Size());
 	if(countGrade==0){
+		delete[](students);
 		return;
 	}
 	const XI::Student** StudentsInGrade =
-			new const XI::Student** [countGrade];
+			new const XI::Student* [countGrade];
 	const XI::Student** StudentsNotInGrade =
-			new const XI::Student** [Size()-countGrade];
+			new const XI::Student* [Size()-countGrade];
 	int i_grade=0, i_not_grade=0;
 	for(int i=0;i<Size();i++){	//for every student in the team
 		if(students[i]->Grade()==grade){
@@ -688,9 +703,9 @@ void XI::IncreaseLevel(int grade, int power){
 		return;
 	}
 	const XI::Student** StudentsInGrade =
-			new const XI::Student** [countGrade];
+			new const XI::Student* [countGrade];
 	const XI::Student** StudentsNotInGrade =
-			new const XI::Student** [Size()-countGrade];
+			new const XI::Student* [Size()-countGrade];
 	int i_grade=0, i_not_grade=0;
 	for(int i=0;i<Size();i++){
 		if(students[i]->Grade()==grade){
@@ -702,17 +717,17 @@ void XI::IncreaseLevel(int grade, int power){
 			i_not_grade++;
 		}
 	}
-	for(int i=0;i<numOfStudentsInGrade;i++){
+	for(int i=0;i<countGrade;i++){
 		try{
-			StudentsInGrade[i]->team;
+			StudentsInGrade[i]->Team();
 		}
 		catch(XI::Student::NoTeamAssigned&){
 			(const_cast<Student&>(*(StudentsInGrade[i]))).IncreasePower(power);
 		}
 	}
-	const XI::Teams** teams=Teams_.toArray();
+	const XI::Team** teams=Teams_.toArray();
 	for(int i=0;i<TSize();i++){		//for every team
-		teams[i]->IncreasePower(grade,power);
+		(const_cast<Team&>(*(teams[i]))).IncreasePower(grade,power);
 	}
 	if(teams){
 		delete[](teams);
@@ -779,15 +794,6 @@ int XI::TSize()const{
 
 
 
-int countStudentsInGrade(XI::Student** array,int grade, int size){
-	int numOfStudentsInGrade=0;
-	for(int i=0;i<size;i++){
-		if(array[i]->Grade()==grade){
-			numOfStudentsInGrade++;
-		}
-	}
-	return numOfStudentsInGrade;
-}
 
 
 
